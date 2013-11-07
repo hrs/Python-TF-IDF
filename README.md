@@ -26,3 +26,7 @@ print table.similarities (["alpha", "bravo", "charlie"]) # => [['foo', 0.6875], 
 ```
 
 *Disclaimer:* This library is a pretty clean example of how TF-IDF operates. However, it's totally unconcerned with efficiency (it's really just an exercise to brush up my Python skills), so you probably don't want to be using it in production. If you're looking for a more heavy-duty Python library to do information retrieval and topic modelling, I'd suggest taking a look at [Gensim](http://radimrehurek.com/gensim/).
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/hrs/python-tf-idf/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
