@@ -1,58 +1,73 @@
 #!/usr/bin/env python
-
+# -*- coding: utf-8 -*-
 """
 The simplest TF-IDF library imaginable.
 
-Add your documents as two-element lists `[docname, [list_of_words_in_the_document]]` with `addDocument(docname, list_of_words)`. Get a list of all the `[docname, similarity_score]` pairs relative to a document by calling `similarities([list_of_words])`.
+Add your documents as two-element lists
+`[docname, [list_of_words_in_the_document]]` with
+`addDocument(docname, list_of_words)`. Get a list of all the
+`[docname, similarity_score]` pairs relative to a document by calling
+`similarities([list_of_words])`.
 
 See the README for a usage example.
 """
+import math
 
-import sys
-import os
+
 
 class tfidf:
-  def __init__(self):
-    self.weighted = False
-    self.documents = []
-    self.corpus_dict = {}
+  documents = []
+
 
   def addDocument(self, doc_name, list_of_words):
-    # building a dictionary
+    """ Adds a new document to a collection of documents """
+
+    # Build dictionary like 'word : frequency'
     doc_dict = {}
-    for w in list_of_words:
-      doc_dict[w] = doc_dict.get(w, 0.) + 1.0
-      self.corpus_dict[w] = self.corpus_dict.get(w, 0.0) + 1.0
+    for word in list_of_words:
+      doc_dict[word] = doc_dict.get(word, 1.)
 
-    # normalizing the dictionary
-    length = float(len(list_of_words))
-    for k in doc_dict:
-      doc_dict[k] = doc_dict[k] / length
-
-    # add the normalized document to the corpus
+    # Add the normalized document to the other documents
     self.documents.append([doc_name, doc_dict])
 
+
+  def _tf(self, word, doc_dict):
+    """ To calculate tf (term frequency) """
+
+    # All words in the document
+    words = doc_dict.keys()
+
+    return words.count(word) / float(len(words))
+
+
+  def _idf(self, word):
+    """ To calculate idf (inverse document frequency) """
+
+    D = float(len(self.documents))
+    Q = sum(1 for doc in self.documents if word in doc[1])
+
+    return math.log10(D / Q)
+
+
   def similarities(self, list_of_words):
-    """Returns a list of all the [docname, similarity_score] pairs relative to a list of words."""
+    """
+    Get the score for a list of words
+    the importance of a set of documents
+    """
 
-    # building the query dictionary
-    query_dict = {}
-    for w in list_of_words:
-      query_dict[w] = query_dict.get(w, 0.0) + 1.0
+    # Returns a list in the form of '[['foo', 0.13], ['bar', 0.0]]'
+    similarities = []
 
-    # normalizing the query
-    length = float(len(list_of_words))
-    for k in query_dict:
-      query_dict[k] = query_dict[k] / length
+    for document in self.documents:
+      doc_name, doc_dict = document
 
-    # computing the list of similarities
-    sims = []
-    for doc in self.documents:
-      score = 0.0
-      doc_dict = doc[1]
-      for k in query_dict:
-        if k in doc_dict:
-          score += (query_dict[k] / self.corpus_dict[k]) + (doc_dict[k] / self.corpus_dict[k])
-      sims.append([doc[0], score])
+      tf_idf = 0.0
 
-    return sims
+      # Calculate the tf-idf for all words in the current document
+      for word in list_of_words:
+        tf_idf += self._tf(word, doc_dict) * self._idf(word)
+
+      similarities.append([doc_name, tf_idf])
+
+    # Return the list of words in the documents of evaluation
+    return similarities
