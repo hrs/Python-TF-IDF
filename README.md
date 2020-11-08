@@ -29,6 +29,10 @@ table.add_document("baz", ["kilo", "lima", "mike", "november"])
 
 print table.similarities(["alpha", "bravo", "charlie"]) # => [['foo', 0.6875], ['bar', 0.75], ['baz', 0.0]]
 ```
+To show top n results:
+```python
+print table.similarities(["alpha", "bravo", "charlie"], top_n = 2) # => [['bar', 0.75], ['foo', 0.6875]]
+```
 
 ### Run the tests
 

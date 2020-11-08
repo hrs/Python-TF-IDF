@@ -10,8 +10,8 @@ class TestTfIdf(unittest.TestCase):
         table.add_document("baz", ["k", "l", "m", "n"])
 
         self.assertEqual(
-            table.similarities(["a", "b", "c"]),
-            [["foo", 0.6875], ["bar", 0.75], ["baz", 0.0]])
+            table.similarities(["a", "b", "c"],2),
+            [["bar", 0.75],["foo", 0.6875]])
 
 
 if __name__ == "__main__":
