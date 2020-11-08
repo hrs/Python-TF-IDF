@@ -36,12 +36,12 @@ class TfIdf:
         # add the normalized document to the corpus
         self.documents.append([doc_name, doc_dict])
 
-    def similarities(self, list_of_words):
-        """Returns a list of all the [docname, similarity_score] pairs relative to a
-list of words.
-
+    def similarities(self, list_of_words, top_n=-1):
         """
-
+        Returns a list of all the [docname, similarity_score] pairs relative to a
+        list of words.
+        set top_n to any positive integer value to get the top n (set by the user) results.
+        """
         # building the query dictionary
         query_dict = {}
         for w in list_of_words:
@@ -63,4 +63,17 @@ list of words.
                       doc_dict[k] / self.corpus_dict[k])
             sims.append([doc[0], score])
 
+        # sorting and returning the top n results
+        if top_n > 0:
+            sims.sort(key=self.__get_score, reverse=True)
+            return sims[:top_n]
+
         return sims
+
+    def __get_score(self, sim_obj):
+        """
+        takes [docname, similarity_score] and returns similarity_score
+        private method used for top_n sorting
+        """
+        return sim_obj[1]
+
